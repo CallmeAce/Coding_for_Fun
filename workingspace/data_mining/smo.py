@@ -110,11 +110,11 @@ def takeStep(i1,i2,datas,labels,alpha,w,b,C):
 			a2 = L
 		else:
 			a2 = H
-	else:   # the function has no maximum point, so we have to check L and H which one can maximize the function
+	else:   # the function has no maximum point, so we have to check L and H to see which one can maximize the function
 		alpha[i2] = L
-		L_v = optimize_SVMFuction(alpha,datas,labels)
+		L_v = value_SVMFuction(alpha,datas,labels)
 		alpha[i2] = H
-		H_v = optimize_SVMFuction(alpha,datas,labels)
+		H_v = value_SVMFuction(alpha,datas,labels)
 		alpha[i2] = alpha2 # change it back
 		if L_v<H_v-eps: # eps,allow some errors
 			a2 = H
@@ -176,7 +176,7 @@ def examineExample(i2,datas_X,alpha,labels,w,b,C):
 	y2 = lables[i2]
 	alpha2 = alpha[i2]
 	point2 = datas_X[i2,:]
-	E2 = w.dot(point2.T)-b-y2
+	E2 = w.dot(point2.T)+b-y2
 	r2 = E2 *y2
 	#KKT condition:
 	# alpha_i=0<==>y_i*u_i>=1
@@ -224,12 +224,13 @@ def SMO (datas_X,labels,C)
 	numChanged = 0
 	examineAll = 1
 	while numChanged >0 | examineAll:
-		# heuristic is like this: loop through all the samples then loop through all the support vectors, one after another. utill on changes have been made
+		# heuristic is like this: loop through all the samples. It made some change, loop through all the support vectors, until no changes been made, then
+		# go back to loop through all the samples, so on and so forth.
 		if examineAll:
 			for i in range(0,n_datas-1):
 				numChanged += examineExample(i,datas_X,alpha,labels,w,b,C)
 			smoError = value_SVMFunction(alpha,datas_X,labels)
-			print("NO.1 the smo error",smoError)
+			print(" the smo error in all the samples",smoError)
 		else:
 			ind_alpha1 = [alpha<C]
 			ind_alpha2 = [alpha>0]
@@ -240,7 +241,7 @@ def SMO (datas_X,labels,C)
 					numChanged +=examineExample(ind_alpha[j],datas_X,alpha,labels,w,b,C)
 			
 			smoError = value_SVMFunction(alpha,datas_X,labels)
-			print("NO.2 the smo error",smoError)
+			print("the smo error in all the support vectors",smoError)
 
 		if examineAll:
 			examineAll =0
@@ -253,7 +254,7 @@ def M_result(X,w,b,labels):
 	length = labels.shape[0]
 	count =0
 	for i in range(0,length-1):
-		if (X[i].dot(w.T)-b)*labels[i]<0:
+		if (X[i].dot(w.T)+b)*labels[i]<0:
 			count++
 	return count
 		
