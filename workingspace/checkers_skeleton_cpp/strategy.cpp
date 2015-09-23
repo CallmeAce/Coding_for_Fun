@@ -13,7 +13,8 @@ namespace checkers
 		clear.data();
 		get_posi(states);
 		int variance_tmp=0;
-		for(int i =0;i<states.size();i++)
+		move_num = states.size();
+		for(int i =0;i<move_num;i++)
 		{
 		     variance_tmp = compute_variance(red_posi[i]);
 			 variance_red.push_back(variance_tmp);
@@ -99,9 +100,14 @@ namespace checkers
 		return variance;
 	}
 
-	GameState Strategy::aggressive (GameState & pState)
+	uint8_t Strategy::aggressive ()
 	{
-			
+		uint8_t s_num = red_num[0];
+		for(int i =1;i<move_num;i++)
+		{
+			if(s_num>red_num[i])
+
+		}			
 	}
 
 }
