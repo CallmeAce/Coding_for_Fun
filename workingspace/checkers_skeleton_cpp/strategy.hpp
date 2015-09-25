@@ -16,6 +16,7 @@ namespace checkers
 class Strategy
 {
   public:
+  	  uint8_t move_type;
 	  uint8_t move_num;
 	  vector<uint8_t> red_num;
       vector<uint8_t> white_num;
